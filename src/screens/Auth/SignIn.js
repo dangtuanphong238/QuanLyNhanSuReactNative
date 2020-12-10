@@ -29,7 +29,7 @@ export default class SignIn extends Component {
   //get User + pass
   getData = async () => {
     await database()
-      .ref('/QuanLyNhanSu/TaiKhoan')
+      .ref('/QuanLyNhanSu/'+ this.state.username)
       .once('value')
       .then((snapshot) => {
         console.log('User data: ', snapshot.val());
