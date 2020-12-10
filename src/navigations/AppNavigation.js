@@ -4,6 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import SignIn from '../screens/Auth/SignIn';
 import SignUp from '../screens/Auth/SignUp';
 import ListRoom from '../screens/Room/ListRoom';
+import AddRoom from '../screens/Room/AddRoom';
 import Splash from '../screens/Splash/Splash';
 
 const Stack = createStackNavigator();
@@ -20,6 +21,7 @@ export default class AppNavigation extends Component {
           <Stack.Screen name="SignIn" component={SignIn} />
           <Stack.Screen name="SignUp" component={SignUp} />
           <Stack.Screen name="ListRoom" component={ListRoom} />
+          <Stack.Screen name="AddRoom" component={AddRoom} />
         </Stack.Navigator>
       </NavigationContainer>
     );

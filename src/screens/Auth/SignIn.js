@@ -68,7 +68,6 @@ export default class SignIn extends Component {
             style={styles.button}
             // onPress={() => navigation.navigate('ListRoom')}>
             onPress={() => this.writeData()}>
-
             <Text>Đăng nhập</Text>
           </TouchableOpacity>
         </View>
