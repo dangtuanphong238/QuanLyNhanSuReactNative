@@ -8,6 +8,8 @@ import {
   StyleSheet,
 } from 'react-native';
 import database from '@react-native-firebase/database';
+import AlertSuccess from '../../shared/components/AlertSuccess';
+import AlertFailed from '../../shared/components/AlertFailed';
 
 export default class SignIn extends Component {
   constructor(props) {
@@ -15,24 +17,65 @@ export default class SignIn extends Component {
     this.state = {
       username: '',
       password: '',
+      isSuccess: false,
+      isFailed: false,
     };
-  
   }
 
-  writeData = () => {
-    database()
-    .ref('/users/123')
-    .set({
-      name: 'Ada Lovelace',
-      age: 31,
-    })
-    .then(() => console.log('Data set.'));
+  // componentDidMount() {
+  //   this.getData();
+  // }
+
+  //get User + pass
+  getData = async () => {
+    await database()
+      .ref('/QuanLyNhanSu/TaiKhoan')
+      .once('value')
+      .then((snapshot) => {
+        console.log('User data: ', snapshot.val());
+        // this.setState({data:snapshot.val()})
+        if (
+          snapshot.val() != '' &&
+          this.state.username != '' &&
+          this.state.password != ''
+        ) {
+          if (
+            snapshot.val().username == this.state.username &&
+            snapshot.val().password == this.state.password
+          ) {
+            this.toggleIsSuccess()
+            setTimeout(() => {
+              this.toggleIsSuccess()
+              this.props.navigation.replace('ListRoom')
+            },2000)
+          } else {
+            this.toggleIsFailed()
+            setTimeout(()=>{
+              this.toggleIsFailed()
+            },2000)
+            console.log('failed');
+          }
+        }
+      });
+  };
+
+  toggleIsSuccess = () => {
+    this.setState({isSuccess: !this.state.isSuccess})
+  }
+
+  toggleIsFailed = () => {
+    this.setState({isFailed: !this.state.isFailed})
   }
 
   render() {
+    //khai bao
     const navigation = this.props.navigation;
+
     return (
       <View style={styles.container}>
+        <AlertSuccess isVisible={this.state.isSuccess} text="Login Success" />
+        <AlertFailed isVisible={this.state.isFailed} text="Login Failed" />
+
         <View style={styles.centerView}>
           <Text style={{fontSize: 30, marginVertical: 30}}>Đăng Nhập</Text>
         </View>
@@ -43,9 +86,10 @@ export default class SignIn extends Component {
               source={require('../../assets/user_icon.png')}
               style={{marginStart: 20}}
             />
+            {/* textInput */}
             <TextInput
               style={{width: '90%'}}
-              onChangeText={(text) => this.setState({username: text})}
+              onChangeText={(user) => this.setState({username: user})}
             />
           </View>
         </View>
@@ -56,19 +100,19 @@ export default class SignIn extends Component {
               source={require('../../assets/pass_icon.png')}
               style={{marginStart: 20}}
             />
+
+            {/* textInput */}
             <TextInput
               style={{width: '90%'}}
               secureTextEntry={true}
-              onChangeText={(text) => this.setState({password: text})}
+              onChangeText={(pass) => this.setState({password: pass})}
             />
           </View>
         </View>
         <View style={styles.view3}>
           <TouchableOpacity
             style={styles.button}
-            // onPress={() => navigation.navigate('ListRoom')}>
-            onPress={() => this.writeData()}>
-
+            onPress={() => this.getData()}>
             <Text>Đăng nhập</Text>
           </TouchableOpacity>
         </View>
