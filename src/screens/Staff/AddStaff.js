@@ -7,11 +7,12 @@ import {
   Image,
   ScrollView,
   Button,
+  ToastAndroid,
 } from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 import database from '@react-native-firebase/database';
 import ImagePicker from 'react-native-image-crop-picker';
-// import storage from '@react-native-firebase/storage';
+import storage from '@react-native-firebase/storage';
 
 export default class AddStaff extends Component {
     
@@ -40,24 +41,43 @@ export default class AddStaff extends Component {
     });
   };
 
-  // uploadImage = () => {
-  //   const reference = storage().ref('/NhanVien/Images/');
-  //   reference.putFile(this.state.photo);
-  // }
+  uploadImage = () => {
+    const task = storage().ref(`/ImageFood/${this.state.tennv}/`).putFile(this.state.photo);
+    task.on('state_changed', snapshot => {
+      console.log("snapshot: "+snapshot)
+    });
+    task.then(() => {
+      alert("Thêm nhân viên thành công!"),
+      this.setState({photo: ''})
+    });
+   
+  }
 
-  ThemNhanVien = () => {
-    // this.uploadImage
-    const ref = database().ref('QuanLyNhanSu/NhanVien/').push();
-    ref
-      .set({
-        tennv: this.state.tennv,
-        ngaysinh: this.state.ngaysinh,
-        sdt: this.state.sdt,
-        cmnd: this.state.cmnd,
-        quequan: this.state.quequan,
-        chucvu: this.state.chucvu,
-      })
-      .then(() => console.log('Data seted'));
+  ThemNhanVien = async() => {
+    const {tennv, ngaysinh, sdt, cmnd, quequan, chucvu, photo} = this.state;
+
+    if(tennv != '' && ngaysinh != '' && sdt != '' && cmnd != '' 
+      && quequan != '' && chucvu != '' && photo != '')
+      {
+        const ref = database().ref(`QuanLyNhanSu/NhanVien/${tennv}`);
+        await ref
+          .set({
+            tennv: this.state.tennv,
+            ngaysinh: this.state.ngaysinh,
+            sdt: this.state.sdt,
+            cmnd: this.state.cmnd,
+            quequan: this.state.quequan,
+            chucvu: this.state.chucvu,
+            photo: this.state.tennv,
+          })
+          .then(() => console.log('Data seted'));
+    
+        await this.uploadImage()
+      }
+      else{
+        alert("Vui lòng nhập đầy đủ các trường!");
+      }
+    
   };
 
   render() {
