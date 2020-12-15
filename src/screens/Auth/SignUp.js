@@ -21,7 +21,7 @@ export default class SignUp extends Component {
   }
 
   ThemTaiKhoan = async () => {
-    const ref = database().ref('QuanLyNhanSu/' + this.state.username);
+    const ref = database().ref('QuanLyNhanSu/TaiKhoan/' + this.state.username);
     ref
       .set({
         username: this.state.username,
