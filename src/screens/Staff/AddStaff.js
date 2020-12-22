@@ -8,6 +8,7 @@ import {
   ScrollView,
   Button,
   ToastAndroid,
+  Alert,
 } from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 import database from '@react-native-firebase/database';
@@ -41,16 +42,18 @@ export default class AddStaff extends Component {
     });
   };
 
-  uploadImage = () => {
+  uploadImage = async() => {
     const task = storage().ref(`/ImageFood/${this.state.tennv}/`).putFile(this.state.photo);
     task.on('state_changed', snapshot => {
       console.log("snapshot: "+snapshot)
-    });
-    task.then(() => {
-      alert("Thêm nhân viên thành công!"),
-      this.setState({photo: ''})
-    });
-   
+    })
+    try {
+        await task;
+    } catch (e) {
+        console.log(e)
+    }
+    this.setState({photo: (await storage().ref(`/ImageFood/${this.state.tennv}`).getDownloadURL()).toString()})
+
   }
 
   ThemNhanVien = async() => {
@@ -59,8 +62,10 @@ export default class AddStaff extends Component {
     if(tennv != '' && ngaysinh != '' && sdt != '' && cmnd != '' 
       && quequan != '' && chucvu != '' && photo != '')
       {
+        await this.uploadImage()
+
         const ref = database().ref(`QuanLyNhanSu/NhanVien/${tennv}`);
-        await ref
+        ref
           .set({
             tennv: this.state.tennv,
             ngaysinh: this.state.ngaysinh,
@@ -68,11 +73,10 @@ export default class AddStaff extends Component {
             cmnd: this.state.cmnd,
             quequan: this.state.quequan,
             chucvu: this.state.chucvu,
-            photo: this.state.tennv,
+            photo: this.state.photo,
           })
-          .then(() => console.log('Data seted'));
+          .then(()=>Alert("Success"));
     
-        await this.uploadImage()
       }
       else{
         alert("Vui lòng nhập đầy đủ các trường!");

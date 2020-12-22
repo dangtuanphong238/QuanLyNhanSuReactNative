@@ -1,8 +1,26 @@
 import React, { Component} from 'react'
-import { View, Text,StyleSheet, TouchableOpacity,Image} from 'react-native'
+import { View, Text,StyleSheet, TouchableOpacity,Image, Alert, LogBox} from 'react-native'
 import { TextInput } from 'react-native-gesture-handler'
 
 export default class UpdateRoom extends Component{
+    constructor(props) {
+        super(props)
+    
+        this.state = {
+            tenphong:'',
+            soluongnguoi:''        
+        };
+    
+    }
+    
+    suaPhongBan = () => {
+        console.log("Update");
+    }
+
+    xoaPhongBan = () => {
+        console.log("Delete");
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -13,24 +31,24 @@ export default class UpdateRoom extends Component{
                 <Text> Tên Phòng : </Text>
                 </View>
                <View>
-                   <TextInput style={styles.textInput}></TextInput>
+                   <TextInput style={styles.textInput} onChangeText={(text)=>this.setState({tenphong:text})}></TextInput>
                </View>
                <View style={styles.view1}>
                 <Text> Số Lượng Người : </Text>
                 </View>
                <View>
-                   <TextInput style={styles.textInput}></TextInput>
+                   <TextInput style={styles.textInput} onChangeText={(text)=>this.setState({soluongnguoi:text})}></TextInput>
                </View>
                <View>
                    <View style={{flexDirection : "row", marginHorizontal: 20, marginRight : 5}}>
                    <View style={styles.view3}>
-                    <TouchableOpacity style={styles.button}>
+                    <TouchableOpacity style={styles.button} onPress={()=>this.suaPhongBan()}>
                     <Image source={require('../../assets/idea.png')} style={{marginHorizontal:10}}/>
                         <Text style = {styles.tieude}>Sửa Phòng</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.view3}>
-                    <TouchableOpacity style={styles.button}>
+                    <TouchableOpacity style={styles.button} onPress={()=> this.xoaPhongBan()}>
                     <Image source={require('../../assets/clear.png')} style={{marginHorizontal:10}}/>
                         <Text style = {styles.tieude}>Xóa Phòng</Text>
                     </TouchableOpacity>

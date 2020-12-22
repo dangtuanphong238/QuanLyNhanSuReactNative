@@ -14,13 +14,20 @@ export default class AddRoom extends Component {
   }
 
   ThemPhong = () =>{
-    const ref = database().ref('QuanLyNhanSu/PhongBan/').push();
-    ref
+    const {tenPhong, soLuongNguoi} = this.state;
+    if(tenPhong != '', soLuongNguoi != '')
+    {
+      const ref = database().ref('QuanLyNhanSu/PhongBan/').push();
+      ref
       .set({
         tenphong: this.state.tenPhong,
         soluongnguoi: this.state.soLuongNguoi,
       })
       .then(() => console.log('Data seted'));
+    }
+    else{
+      alert("Vui lòng nhập đủ các trường!");
+    }
   }
 
   render() {
